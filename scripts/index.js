@@ -16,7 +16,7 @@ const getCurry = () => {
   return menu[Math.floor(Math.random() * menu.length)];
 };
 
-const getExtras = (n) => {
+const getExtras = n => {
   const menu = [
     'なま玉子',
     'ゆで玉子',
@@ -31,7 +31,7 @@ const getExtras = (n) => {
 
   const extras = [];
 
-  while (n--) {
+  for (let i = 0; i < n; i++) {
     extras.push(menu[Math.floor(Math.random() * menu.length)]);
   }
 
