@@ -39,12 +39,12 @@ const getExtras = n => {
 };
 
 module.exports = robot => {
-  robot.hear(/カレー/, response => {
+  robot.hear(/^カレー$/, response => {
     response.send(':curry:');
   });
 
-  robot.hear(/ルーレット/, response => {
-    const message = getCurry() + 'カレー ＋ ' + getExtras(1) + 'トッピング';
+  robot.hear(/今日のカレー/, response => {
+    const message = ':curry: ' + getCurry() + 'カレー（マサラ） ＋ ' + getExtras(1) + 'トッピング';
     response.send(message);
-  })
+  });
 };
