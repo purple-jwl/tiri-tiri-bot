@@ -43,8 +43,9 @@ module.exports = robot => {
     response.send(':curry:');
   });
 
-  robot.hear(/今日のカレー/, response => {
-    const message = ':curry: ' + getCurry() + 'カレー（マサラ） ＋ ' + getExtras(1) + 'トッピング';
+  robot.hear(/今日のカレー(\d+)*/, response => {
+    const n = response.match[1] === undefined ? 1 : response.match[1];
+    const message = ':curry: ' + getCurry() + 'カレー（マサラ） ＋ ' + getExtras(n) + 'トッピング';
     response.send(message);
   });
 };
