@@ -7,10 +7,10 @@ const getCurry = () => {
     'トマト',
     'ポーク',
     'チキン',
-    'ピーンズ（チャナ豆＋レンズ豆）',
+    'ピーンズ（チャナ豆＆レンズ豆）',
     'チーズ',
     'シュリンプ',
-    'ミックス（トマト＋チーズ＋ホウレン草）',
+    'ミックス（トマト＆チーズ＆ホウレン草）',
   ];
 
   return menu[Math.floor(Math.random() * menu.length)];
@@ -35,7 +35,7 @@ const getExtras = n => {
     extras.push(menu[Math.floor(Math.random() * menu.length)]);
   }
 
-  return extras;
+  return extras.join('＆');
 };
 
 const getExtraCount = () => (
@@ -49,7 +49,7 @@ module.exports = robot => {
 
   robot.hear(/^今日のカレー$/, response => {
     const extraCount = getExtraCount();
-    const message = getCurry() + 'カレー（マサラ）' + (extraCount ? (' + ' + getExtras(extraCount) + 'トッピング') : '');
+    const message = getCurry() + 'カレー' + (extraCount ? (' ＋ ' + getExtras(extraCount) + 'トッピング') : '');
     response.send(message);
   });
 };
