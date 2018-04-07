@@ -38,14 +38,18 @@ const getExtras = n => {
   return extras;
 };
 
+const getExtraCount = () => (
+  [0, 1, 1, 1, 1, 1, 1, 1, 2, 2][Math.floor(Math.random() * 10)]
+);
+
 module.exports = robot => {
   robot.hear(/^カレー$/, response => {
     response.send(':curry:');
   });
 
-  robot.hear(/今日のカレー(\d+)*/, response => {
-    const n = response.match[1] === undefined ? 1 : response.match[1];
-    const message = ':curry: ' + getCurry() + 'カレー（マサラ） ＋ ' + getExtras(n) + 'トッピング';
+  robot.hear(/^今日のカレー$/, response => {
+    const extraCount = getExtraCount();
+    const message = getCurry() + 'カレー（マサラ）' + (extraCount ? (' + ' + getExtras(extraCount) + 'トッピング') : '');
     response.send(message);
   });
 };
