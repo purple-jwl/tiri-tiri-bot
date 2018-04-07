@@ -49,7 +49,7 @@ module.exports = robot => {
 
   robot.hear(/^今日のカレー$/, response => {
     const extraCount = getExtraCount();
-    const message = getCurry() + 'カレー' + (extraCount ? (' ＋ ' + getExtras(extraCount) + 'トッピング') : '');
+    const message = `<@${response.message['user']['id']}> ${getCurry()}カレー${(extraCount ? (' ＋ ' + getExtras(extraCount) + 'トッピング') : '')}`;
     response.send(message);
   });
 };
