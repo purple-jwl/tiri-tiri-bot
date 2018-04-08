@@ -42,7 +42,11 @@ const getExtraCount = () => (
   [0, 1, 1, 1, 1, 1, 1, 1, 2, 2][Math.floor(Math.random() * 10)]
 );
 
+const targetUserNames = ['purple_jwl', 'tiri-tiri-bot'];
+
 module.exports = robot => {
+  const users = Object.values(robot.brain.data.users).filter(user => targetUserNames.includes(user.name));
+
   robot.hear(/^カレー$/, response => {
     response.send(':curry:');
   });
@@ -50,6 +54,11 @@ module.exports = robot => {
   robot.hear(/^今日のカレー$/, response => {
     const extraCount = getExtraCount();
     const message = `<@${response.message['user']['id']}> ${getCurry()}カレー${(extraCount ? (' ＋ ' + getExtras(extraCount) + 'トッピング') : '')}`;
+    response.send(message);
+  });
+
+  robot.hear(/^カレーメイト$/, response => {
+    const message = users.map(obj => `<@${obj.id}>`).join(' ') + ' カレーを食べよう!!';
     response.send(message);
   });
 };
