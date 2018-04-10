@@ -47,6 +47,20 @@ const targetUserNames = ['purple_jwl', 'tiri-tiri-bot'];
 module.exports = robot => {
   const users = Object.values(robot.brain.data.users).filter(user => targetUserNames.includes(user.name));
 
+  const getActiveUsers = async users => {
+    const activeUsers = [];
+
+    for (let i = 0; i < users.length; i++) {
+      const result = await robot.adapter.client.web.users.getPresence(users[i].id);
+      if (result['presence'] === 'active') {
+        activeUsers.push(users[i]);
+      }
+      console.log(i);
+    }
+    console.log(activeUsers);
+    return activeUsers;
+  };
+
   robot.hear(/^カレー$/, response => {
     response.send(':curry:');
   });
@@ -58,7 +72,9 @@ module.exports = robot => {
   });
 
   robot.hear(/^カレーメイト$/, response => {
-    const message = users.map(obj => `<@${obj.id}>`).join(' ') + ' カレーを食べよう!!';
-    response.send(message);
+    getActiveUsers(users).then(result => {
+      const message = result.map(obj => `<@${obj.id}>`).join(' ') + ' カレーを食べよう!!';
+      response.send(message);
+    });
   });
 };
