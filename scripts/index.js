@@ -55,9 +55,8 @@ module.exports = robot => {
       if (result['presence'] === 'active') {
         activeUsers.push(users[i]);
       }
-      console.log(i);
     }
-    console.log(activeUsers);
+
     return activeUsers;
   };
 
