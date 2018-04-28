@@ -64,7 +64,7 @@ module.exports = robot => {
     response.send(':curry:');
   });
 
-  robot.hear(/^今日のカレー$/, response => {
+  robot.hear(/^今日のチリチリ$/, response => {
     const extraCount = getExtraCount();
     const message = `<@${response.message['user']['id']}> ${getCurry()}カレー${(extraCount ? (' ＋ ' + getExtras(extraCount) + 'トッピング') : '')}`;
     response.send(message);
