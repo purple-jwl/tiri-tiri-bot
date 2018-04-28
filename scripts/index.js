@@ -38,20 +38,23 @@ const getExtras = n => {
   return extras.join('＆');
 };
 
-const getExtraCount = () => (
-  [0, 1, 1, 1, 1, 1, 1, 1, 2, 2][Math.floor(Math.random() * 10)]
-);
+const getExtraCount = () =>
+  [0, 1, 1, 1, 1, 1, 1, 1, 2, 2][Math.floor(Math.random() * 10)];
 
 const targetUserNames = ['purple_jwl', 'tiri-tiri-bot'];
 
 module.exports = robot => {
-  const users = Object.values(robot.brain.data.users).filter(user => targetUserNames.includes(user.name));
+  const users = Object.values(robot.brain.data.users).filter(user =>
+    targetUserNames.includes(user.name),
+  );
 
   const getActiveUsers = async users => {
     const activeUsers = [];
 
     for (let i = 0; i < users.length; i++) {
-      const result = await robot.adapter.client.web.users.getPresence(users[i].id);
+      const result = await robot.adapter.client.web.users.getPresence(
+        users[i].id,
+      );
       if (result['presence'] === 'active') {
         activeUsers.push(users[i]);
       }
@@ -66,13 +69,16 @@ module.exports = robot => {
 
   robot.hear(/^今日のチリチリ$/, response => {
     const extraCount = getExtraCount();
-    const message = `<@${response.message['user']['id']}> ${getCurry()}カレー${(extraCount ? (' ＋ ' + getExtras(extraCount) + 'トッピング') : '')}`;
+    const message = `<@${response.message['user']['id']}> ${getCurry()}カレー${
+      extraCount ? ' ＋ ' + getExtras(extraCount) + 'トッピング' : ''
+    }`;
     response.send(message);
   });
 
   robot.hear(/^カレーメイト$/, response => {
     getActiveUsers(users).then(result => {
-      const message = result.map(obj => `<@${obj.id}>`).join(' ') + ' カレーを食べよう!!';
+      const message =
+        result.map(obj => `<@${obj.id}>`).join(' ') + ' カレーを食べよう!!';
       response.send(message);
     });
   });
@@ -86,7 +92,11 @@ module.exports = robot => {
 ※全てのチームが *${lowerLimit}人以上* になるようにいい感じにチームを作ります。
 `;
 
-    const postedMessageInfo = await robot.adapter.client.web.chat.postMessage(response.message['room'], message, { as_user: true });
+    const postedMessageInfo = await robot.adapter.client.web.chat.postMessage(
+      response.message['room'],
+      message,
+      { as_user: true },
+    );
 
     setTimeout(async () => {
       const res = await robot.adapter.client.web.reactions.get({
@@ -94,9 +104,17 @@ module.exports = robot => {
         channel: postedMessageInfo.channel,
       });
 
-      const uniqueUsers = Array.isArray(res.message['reactions']) ? [...(new Set(res.message['reactions'].reduce((accumulator, currentValue) => (
-        accumulator.concat(currentValue.users)
-      ), [])))] : [];
+      const uniqueUsers = Array.isArray(res.message['reactions'])
+        ? [
+            ...new Set(
+              res.message['reactions'].reduce(
+                (accumulator, currentValue) =>
+                  accumulator.concat(currentValue.users),
+                [],
+              ),
+            ),
+          ]
+        : [];
 
       for (let i = uniqueUsers.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -117,9 +135,14 @@ module.exports = robot => {
           teams[i % teamCount].push(uniqueUsers[i]);
         }
 
-        const message = 'これらのチームでランチに行きましょう！\n' + teams.map((team, idx) => (
-          `チーム${idx + 1}: ` + team.map(user => `<@${user}>`).join(' ')
-        )).join('\n');
+        const message =
+          'これらのチームでランチに行きましょう！\n' +
+          teams
+            .map(
+              (team, idx) =>
+                `チーム${idx + 1}: ` + team.map(user => `<@${user}>`).join(' '),
+            )
+            .join('\n');
 
         response.send(message);
       }
