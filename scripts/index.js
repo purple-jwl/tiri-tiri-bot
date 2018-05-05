@@ -41,28 +41,7 @@ const getExtras = n => {
 const getExtraCount = () =>
   [0, 1, 1, 1, 1, 1, 1, 1, 2, 2][Math.floor(Math.random() * 10)];
 
-const targetUserNames = ['purple_jwl', 'tiri-tiri-bot'];
-
 module.exports = robot => {
-  const users = Object.values(robot.brain.data.users).filter(user =>
-    targetUserNames.includes(user.name),
-  );
-
-  const getActiveUsers = async users => {
-    const activeUsers = [];
-
-    for (let i = 0; i < users.length; i++) {
-      const result = await robot.adapter.client.web.users.getPresence(
-        users[i].id,
-      );
-      if (result['presence'] === 'active') {
-        activeUsers.push(users[i]);
-      }
-    }
-
-    return activeUsers;
-  };
-
   robot.hear(/^カレー$/, response => {
     response.send(':curry:');
   });
@@ -73,14 +52,6 @@ module.exports = robot => {
       extraCount ? ' ＋ ' + getExtras(extraCount) + 'トッピング' : ''
     }`;
     response.send(message);
-  });
-
-  robot.hear(/^カレーメイト$/, response => {
-    getActiveUsers(users).then(result => {
-      const message =
-        result.map(obj => `<@${obj.id}>`).join(' ') + ' カレーを食べよう!!';
-      response.send(message);
-    });
   });
 
   robot.hear(/^シャッフルランチ$/, async response => {
